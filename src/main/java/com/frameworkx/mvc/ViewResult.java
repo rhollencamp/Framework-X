@@ -17,6 +17,10 @@
  */
 package com.frameworkx.mvc;
 
+import com.frameworkx.AbstractApplication;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,7 +31,45 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViewResult extends Result {
 
+	private static String controllerPostfix;
+	private static String templateBase;
+	private static String templateExtension;
+
+	/**
+	 * Forward a request to the template engine
+	 *
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	@Override
-	public void execute(final HttpServletRequest request, final HttpServletResponse response) {
+	public void execute(final HttpServletRequest request, final HttpServletResponse response)
+			throws ServletException, IOException {
+		final Method m = (Method) request.getAttribute("com.frameworkx.controllerMethod");
+		final Class<? extends Controller> c = m.getDeclaringClass().asSubclass(Controller.class);
+
+		// class name
+		String className = c.getSimpleName();
+		if (controllerPostfix != null && controllerPostfix.isEmpty() == false && className.endsWith(controllerPostfix)) {
+			className = className.substring(0, className.length() - controllerPostfix.length());
+		}
+
+		// method name
+		final String methodName = m.getName();
+
+		// determine path to template and forward
+		final String templateName = templateBase + "/" + className + "/" + methodName + "." + templateExtension;
+		request.getRequestDispatcher(templateName).forward(request, response);
+	}
+
+	/**
+	 * Load configuration options the first time a ViewResult is
+	 * @param request
+	 */
+	public static void init(final AbstractApplication app) {
+		controllerPostfix = app.getProperty("viewEngine.controllerPostfix");
+		templateBase = app.getProperty("viewEngine.templateBaseDir");
+		templateExtension = app.getProperty("viewEngine.templateExtension");
 	}
 }

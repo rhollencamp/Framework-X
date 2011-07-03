@@ -17,6 +17,7 @@
  */
 package com.frameworkx;
 
+import com.frameworkx.mvc.ViewResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -54,7 +55,19 @@ public abstract class AbstractApplication {
 		}
 		this.loadInstanceProperties();
 
+		this.setStaticConfig();
+
 		this.registerRoutes();
+	}
+
+	/**
+	 * Access configuration values
+	 *
+	 * @param key
+	 * @return
+	 */
+	public String getProperty(final String key) {
+		return this.properties.getProperty(key);
 	}
 
 	/**
@@ -172,4 +185,11 @@ public abstract class AbstractApplication {
 	 * Fill out the route table
 	 */
 	protected abstract void registerRoutes();
+
+	/**
+	 * Initialize static configuration
+	 */
+	private void setStaticConfig() {
+		ViewResult.init(this);
+	}
 }

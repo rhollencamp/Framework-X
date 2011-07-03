@@ -173,8 +173,7 @@ public class ControllerRouteHandler implements RouteHandler {
 				return;
 			}
 
-			// put the class and method in the request; view result needs to know
-			request.setAttribute("com.frameworkx.controllerClass", controllerClass);
+			// put the method in the request; view result needs to know
 			request.setAttribute("com.frameworkx.controllerMethod", controllerMethod);
 
 			Result result = (Result) controllerMethod.invoke(controller, getMethodArgs(controllerMethod, request));
