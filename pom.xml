@@ -9,31 +9,45 @@
 	<packaging>jar</packaging>
 
 	<name>Framework X</name>
+	<description>Java Web Application Framework</description>
 	<url>http://www.framework-x.com</url>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:rhollencamp/framework-x.git</connection>
+		<url>https://github.com/rhollencamp/framework-x</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-	 <dependency>
-	  <groupId>commons-io</groupId>
-	  <artifactId>commons-io</artifactId>
-	  <version>2.0.1</version>
-	 </dependency>
-	 <dependency>
-	  <groupId>commons-lang</groupId>
-	  <artifactId>commons-lang</artifactId>
-	  <version>2.5</version>
-	  <type>jar</type>
-	 </dependency>
-	 <dependency>
-	  <groupId>com.thoughtworks.paranamer</groupId>
-	  <artifactId>paranamer</artifactId>
-	  <version>2.3</version>
-	  <type>jar</type>
-	 </dependency>
-	 <dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.paranamer</groupId>
+			<artifactId>paranamer</artifactId>
+			<version>2.3</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
 			<version>6.0</version>
