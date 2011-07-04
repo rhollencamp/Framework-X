@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
@@ -45,15 +46,15 @@ public abstract class AbstractApplication {
 	 *
 	 * This should not be called from client code
 	 */
-	public final void init() {
+	public final void init(final ServletContext servletContext) {
 		this.loadDefaultProperties();
-		this.loadAppProperties();
+		this.loadAppProperties(servletContext);
 
 		this.instance = this.resolveInstance();
 		if (this.instance == null || this.instance.isEmpty()) {
 			throw new IllegalStateException("Instance can not be null or empty");
 		}
-		this.loadInstanceProperties();
+		this.loadInstanceProperties(servletContext);
 
 		this.setStaticConfig();
 
@@ -95,8 +96,8 @@ public abstract class AbstractApplication {
 	 *
 	 * @throws RuntimeException if application properties file can not be read
 	 */
-	private void loadAppProperties() {
-		final InputStream is = this.getClass().getResourceAsStream("/framework-x.properties");
+	private void loadAppProperties(final ServletContext servletContext) {
+		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/framework-x.properties");
 		try {
 			if (is != null) {
 				this.properties.load(is);
@@ -113,8 +114,8 @@ public abstract class AbstractApplication {
 	 *
 	 * @throws RuntimeException if an IOException occurs while reading instance properties file
 	 */
-	private void loadInstanceProperties() {
-		final InputStream is = this.getClass().getResourceAsStream("/instance-" + this.instance + ".properties");
+	private void loadInstanceProperties(final ServletContext servletContext) {
+		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/instance-" + this.instance + ".properties");
 		try {
 			if (is != null) {
 				this.properties.load(is);

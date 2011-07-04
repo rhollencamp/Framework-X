@@ -46,7 +46,7 @@ public class Filter implements javax.servlet.Filter {
 	public void init(final FilterConfig config) throws ServletException {
 		this.config = config;
 		this.app = (AbstractApplication) this.config.getServletContext().getAttribute("com.frameworkx.application");
-		this.app.init();
+		this.app.init(this.config.getServletContext());
 	}
 
 	/**
