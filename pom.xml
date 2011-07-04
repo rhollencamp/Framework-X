@@ -25,6 +25,15 @@
 		<url>https://github.com/rhollencamp/framework-x</url>
 	</scm>
 
+	<developers>
+		<developer>
+			<id>rhollencamp</id>
+			<email>rhollencamp@gmail.com</email>
+			<name>Robert Hollencamp</name>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
