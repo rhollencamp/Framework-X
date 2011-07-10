@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Robert Hollencamp
  */
-public interface RouteHandler {
-
+public interface RouteHandler
+{
 	/**
 	 * Handle a HTTP Request
 	 *

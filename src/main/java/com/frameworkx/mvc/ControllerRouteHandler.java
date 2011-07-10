@@ -32,11 +32,10 @@ import org.apache.commons.lang.WordUtils;
  *
  * @author Robert Hollencamp
  */
-public class ControllerRouteHandler implements RouteHandler {
-
+public class ControllerRouteHandler implements RouteHandler
+{
 	private static final CachingParanamer paranamer = new CachingParanamer();
 	private static final String controllerPostfix = "Controller";
-
 	private final String packageName;
 	private final Object className;
 	private final Object methodName;
@@ -48,7 +47,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param className
 	 * @param methodName
 	 */
-	public ControllerRouteHandler(final String packageName, final Object className, final Object methodName) {
+	public ControllerRouteHandler(final String packageName, final Object className, final Object methodName)
+	{
 		if (packageName == null || packageName.isEmpty()) {
 			throw new IllegalArgumentException("Package Name can not be null or empty");
 		}
@@ -71,7 +71,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param method
 	 * @return
 	 */
-	private Object[] getMethodArgs(final Method method, final HttpServletRequest request) {
+	private Object[] getMethodArgs(final Method method, final HttpServletRequest request)
+	{
 		// get parameter names
 		String[] paramNames;
 		synchronized (paranamer) {
@@ -104,7 +105,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param m
 	 * @return
 	 */
-	private String determineClassName(final Matcher m) {
+	private String determineClassName(final Matcher m)
+	{
 		String ret;
 		if (this.className instanceof Integer) {
 			ret = m.group((Integer) this.className) + controllerPostfix;
@@ -121,7 +123,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param m
 	 * @return
 	 */
-	private String determineMethodName(final Matcher m) {
+	private String determineMethodName(final Matcher m)
+	{
 		if (this.methodName instanceof Integer) {
 			return m.group((Integer) this.methodName);
 		}
@@ -135,7 +138,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param clss
 	 * @return
 	 */
-	private Method chooseMethod(final String methodName, final Class<? extends Controller> clss, final HttpServletRequest request) {
+	private Method chooseMethod(final String methodName, final Class<? extends Controller> clss, final HttpServletRequest request)
+	{
 		for (Method func : clss.getMethods()) {
 			if (func.getName().equals(methodName)) {
 				// check HTTP method
@@ -162,7 +166,8 @@ public class ControllerRouteHandler implements RouteHandler {
 	 * @param response
 	 * @param m
 	 */
-	public void execute(final HttpServletRequest request, final HttpServletResponse response, final Matcher m) {
+	public void execute(final HttpServletRequest request, final HttpServletResponse response, final Matcher m)
+	{
 		try {
 			Class<? extends Controller> controllerClass = Class.forName(this.packageName + "." + this.determineClassName(m)).asSubclass(Controller.class);
 			Controller controller = controllerClass.getConstructor().newInstance();

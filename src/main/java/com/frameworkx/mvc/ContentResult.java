@@ -26,8 +26,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author rhollencamp
  */
-public class ContentResult extends Result {
-
+public class ContentResult extends Result
+{
 	final private String contentType;
 	final private String content;
 
@@ -37,20 +37,22 @@ public class ContentResult extends Result {
 	 * @param contentType
 	 * @param content
 	 */
-	public ContentResult(final String contentType, final String content) {
+	public ContentResult(final String contentType, final String content)
+	{
 		this.contentType = contentType;
 		this.content = content;
 	}
 
 	/**
 	 * Write the supplied content-type and content to the response
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
 	@Override
-	public void execute(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	public void execute(final HttpServletRequest request, final HttpServletResponse response) throws IOException
+	{
 		response.setContentType(this.contentType);
 		response.getWriter().write(this.content);
 	}

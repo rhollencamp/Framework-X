@@ -31,8 +31,8 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HttpMethod {
-
+public @interface HttpMethod
+{
 	/**
 	 * HTTP Method to accept. If null or empty, all methods are accepted. Otherwise method is
 	 * compared with <code>String.contains</code>, so you can enter multiple values separated

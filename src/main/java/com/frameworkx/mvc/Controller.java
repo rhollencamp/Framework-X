@@ -22,5 +22,6 @@ package com.frameworkx.mvc;
  *
  * @author Robert Hollencamp
  */
-public abstract class Controller {
+public abstract class Controller
+{
 }

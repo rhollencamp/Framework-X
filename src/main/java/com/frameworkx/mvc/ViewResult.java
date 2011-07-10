@@ -29,8 +29,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Robert Hollencamp
  */
-public class ViewResult extends Result {
-
+public class ViewResult extends Result
+{
 	private static String controllerPostfix;
 	private static String templateBase;
 	private static String templateExtension;
@@ -45,7 +45,8 @@ public class ViewResult extends Result {
 	 */
 	@Override
 	public void execute(final HttpServletRequest request, final HttpServletResponse response)
-			throws ServletException, IOException {
+			throws ServletException, IOException
+	{
 		final Method m = (Method) request.getAttribute("com.frameworkx.controllerMethod");
 		final Class<? extends Controller> c = m.getDeclaringClass().asSubclass(Controller.class);
 
@@ -67,7 +68,8 @@ public class ViewResult extends Result {
 	 * Load configuration options the first time a ViewResult is
 	 * @param request
 	 */
-	public static void init(final AbstractApplication app) {
+	public static void init(final AbstractApplication app)
+	{
 		controllerPostfix = app.getProperty("viewEngine.controllerPostfix");
 		templateBase = app.getProperty("viewEngine.templateBaseDir");
 		templateExtension = app.getProperty("viewEngine.templateExtension");

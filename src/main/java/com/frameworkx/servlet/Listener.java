@@ -31,9 +31,10 @@ import javax.servlet.ServletContextListener;
  *
  * @author robert.hollencamp
  */
-public class Listener implements ServletContextListener {
-
-	public void contextInitialized(final ServletContextEvent sce) {
+public class Listener implements ServletContextListener
+{
+	public void contextInitialized(final ServletContextEvent sce)
+	{
 		final String className = sce.getServletContext().getInitParameter("com.frameworkx.applicationImpl");
 		if (className == null || className.isEmpty()) {
 			throw new RuntimeException("Application Class must be specified in web.xml");
@@ -49,6 +50,7 @@ public class Listener implements ServletContextListener {
 		}
 	}
 
-	public void contextDestroyed(final ServletContextEvent sce) {
+	public void contextDestroyed(final ServletContextEvent sce)
+	{
 	}
 }

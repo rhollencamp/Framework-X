@@ -13,17 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Serve static content like CSS and Javascript files directly from the servlet container
- * 
+ *
  * @author rhollencamp
  */
-public class StaticContentRouteHandler implements RouteHandler {
-
+public class StaticContentRouteHandler implements RouteHandler
+{
 	private final String mf;
 
 	/**
 	 * Serve static content based on the entire string matched by the route pattern
 	 */
-	public StaticContentRouteHandler() {
+	public StaticContentRouteHandler()
+	{
 		this.mf = null;
 	}
 
@@ -33,7 +34,8 @@ public class StaticContentRouteHandler implements RouteHandler {
 	 *
 	 * @param pattern MessageFormat pattern
 	 */
-	public StaticContentRouteHandler(final String pattern) {
+	public StaticContentRouteHandler(final String pattern)
+	{
 		this.mf = pattern;
 	}
 
@@ -46,7 +48,8 @@ public class StaticContentRouteHandler implements RouteHandler {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	public void execute(HttpServletRequest request, HttpServletResponse response, Matcher m) throws ServletException, IOException {
+	public void execute(HttpServletRequest request, HttpServletResponse response, Matcher m) throws ServletException, IOException
+	{
 		String path;
 
 		if (this.mf != null) {

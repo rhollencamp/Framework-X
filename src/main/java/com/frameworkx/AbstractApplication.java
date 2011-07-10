@@ -35,8 +35,8 @@ import org.apache.commons.io.IOUtils;
  *
  * @author robert.hollencamp
  */
-public abstract class AbstractApplication {
-
+public abstract class AbstractApplication
+{
 	private final Properties properties = new Properties();
 	private String instance;
 	private final Map<Pattern, RouteHandler> routes = new LinkedHashMap<Pattern, RouteHandler>();
@@ -46,7 +46,8 @@ public abstract class AbstractApplication {
 	 *
 	 * This should not be called from client code
 	 */
-	public final void init(final ServletContext servletContext) {
+	public final void init(final ServletContext servletContext)
+	{
 		this.loadDefaultProperties();
 		this.loadAppProperties(servletContext);
 
@@ -67,7 +68,8 @@ public abstract class AbstractApplication {
 	 * @param key
 	 * @return
 	 */
-	public String getProperty(final String key) {
+	public String getProperty(final String key)
+	{
 		return this.properties.getProperty(key);
 	}
 
@@ -76,7 +78,8 @@ public abstract class AbstractApplication {
 	 *
 	 * @throws RuntimeException if default properties file can not be read
 	 */
-	private void loadDefaultProperties() {
+	private void loadDefaultProperties()
+	{
 		final InputStream is = AbstractApplication.class.getResourceAsStream("/com/frameworkx/framework-x.properties");
 		try {
 			if (is != null) {
@@ -96,7 +99,8 @@ public abstract class AbstractApplication {
 	 *
 	 * @throws RuntimeException if application properties file can not be read
 	 */
-	private void loadAppProperties(final ServletContext servletContext) {
+	private void loadAppProperties(final ServletContext servletContext)
+	{
 		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/framework-x.properties");
 		try {
 			if (is != null) {
@@ -114,7 +118,8 @@ public abstract class AbstractApplication {
 	 *
 	 * @throws RuntimeException if an IOException occurs while reading instance properties file
 	 */
-	private void loadInstanceProperties(final ServletContext servletContext) {
+	private void loadInstanceProperties(final ServletContext servletContext)
+	{
 		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/instance-" + this.instance + ".properties");
 		try {
 			if (is != null) {
@@ -133,7 +138,8 @@ public abstract class AbstractApplication {
 	 * @param p
 	 * @param rh
 	 */
-	protected void registerRoute(final Pattern p, final RouteHandler rh) {
+	protected void registerRoute(final Pattern p, final RouteHandler rh)
+	{
 		if (p == null) {
 			throw new IllegalArgumentException("Pattern can not be null");
 		}
@@ -151,7 +157,8 @@ public abstract class AbstractApplication {
 	 * @param request
 	 * @param response
 	 */
-	public void execute(final HttpServletRequest request, final HttpServletResponse response) {
+	public void execute(final HttpServletRequest request, final HttpServletResponse response)
+	{
 		final String path = request.getRequestURI().substring(request.getContextPath().length());
 
 		try {
@@ -190,7 +197,8 @@ public abstract class AbstractApplication {
 	/**
 	 * Initialize static configuration
 	 */
-	private void setStaticConfig() {
+	private void setStaticConfig()
+	{
 		ViewResult.init(this);
 	}
 }

@@ -32,8 +32,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author robert.hollencamp
  */
-public class Filter implements javax.servlet.Filter {
-
+public class Filter implements javax.servlet.Filter
+{
 	private FilterConfig config;
 	private AbstractApplication app;
 
@@ -43,7 +43,8 @@ public class Filter implements javax.servlet.Filter {
 	 * @param config
 	 * @throws ServletException
 	 */
-	public void init(final FilterConfig config) throws ServletException {
+	public void init(final FilterConfig config) throws ServletException
+	{
 		this.config = config;
 		this.app = (AbstractApplication) this.config.getServletContext().getAttribute("com.frameworkx.application");
 		this.app.init(this.config.getServletContext());
@@ -58,11 +59,13 @@ public class Filter implements javax.servlet.Filter {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
+	{
 		this.app.execute((HttpServletRequest) request, (HttpServletResponse) response);
 		return;
 	}
 
-	public void destroy() {
+	public void destroy()
+	{
 	}
 }

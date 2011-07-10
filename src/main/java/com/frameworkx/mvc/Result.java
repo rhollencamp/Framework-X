@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Robert Hollencamp
  */
-public abstract class Result {
-
+public abstract class Result
+{
 	abstract public void execute(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException;
 }
