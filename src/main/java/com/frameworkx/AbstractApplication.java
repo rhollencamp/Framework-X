@@ -21,6 +21,8 @@ import com.frameworkx.mvc.ViewResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -40,6 +42,7 @@ public abstract class AbstractApplication
 	private final Properties properties = new Properties();
 	private String instance;
 	private final Map<Pattern, RouteHandler> routes = new LinkedHashMap<Pattern, RouteHandler>();
+	private final List<Plugin> plugins = new LinkedList<Plugin>();
 
 	/**
 	 * Initialize the framework
@@ -58,6 +61,8 @@ public abstract class AbstractApplication
 		this.loadInstanceProperties(servletContext);
 
 		this.setStaticConfig();
+
+		this.loadPlugins();
 
 		this.registerRoutes();
 	}
@@ -161,6 +166,11 @@ public abstract class AbstractApplication
 	{
 		final String path = request.getRequestURI().substring(request.getContextPath().length());
 
+		// plugin requestReceived hook
+		for (Plugin p : this.plugins) {
+			p.requestReceived(request, response);
+		}
+
 		try {
 			for (Map.Entry<Pattern, RouteHandler> kvp : this.routes.entrySet()) {
 				Matcher m = kvp.getKey().matcher(path);
@@ -200,5 +210,18 @@ public abstract class AbstractApplication
 	private void setStaticConfig()
 	{
 		ViewResult.init(this);
+	}
+
+	/**
+	 * Load and initialize plugins
+	 */
+	private void loadPlugins()
+	{
+		if ("Y".equals(this.properties.getProperty("plugins.poweredBy"))) {
+			// add the powered by plugin
+			Plugin p = new PoweredByPlugin();
+			p.init();
+			this.plugins.add(p);
+		}
 	}
 }
