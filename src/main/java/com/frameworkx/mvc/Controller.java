@@ -17,6 +17,9 @@
  */
 package com.frameworkx.mvc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Base class for an MVC controller
  *
@@ -24,4 +27,5 @@ package com.frameworkx.mvc;
  */
 public abstract class Controller
 {
+	final protected Map<String, Object> viewData = new HashMap<String, Object>();
 }

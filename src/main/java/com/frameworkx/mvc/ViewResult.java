@@ -20,6 +20,7 @@ package com.frameworkx.mvc;
 import com.frameworkx.AbstractApplication;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,17 +48,21 @@ public class ViewResult extends Result
 	public void execute(final HttpServletRequest request, final HttpServletResponse response)
 			throws ServletException, IOException
 	{
-		final Method m = (Method) request.getAttribute("com.frameworkx.controllerMethod");
-		final Class<? extends Controller> c = m.getDeclaringClass().asSubclass(Controller.class);
-
-		// class name
-		String className = c.getSimpleName();
-		if (controllerPostfix != null && controllerPostfix.isEmpty() == false && className.endsWith(controllerPostfix)) {
-			className = className.substring(0, className.length() - controllerPostfix.length());
+		// view data
+		final Controller co = (Controller)request.getAttribute("com.frameworkx.controller");
+		for (Map.Entry<String, Object> kvp : co.viewData.entrySet()) {
+			request.setAttribute(kvp.getKey(), kvp.getValue());
 		}
 
 		// method name
+		final Method m = (Method)request.getAttribute("com.frameworkx.controllerMethod");
 		final String methodName = m.getName();
+
+		// controller class name
+		String className = co.getClass().getSimpleName();
+		if (controllerPostfix != null && controllerPostfix.isEmpty() == false && className.endsWith(controllerPostfix)) {
+			className = className.substring(0, className.length() - controllerPostfix.length());
+		}
 
 		// determine path to template and forward
 		final String templateName = templateBase + "/" + className + "/" + methodName + "." + templateExtension;
