@@ -43,6 +43,7 @@ public abstract class AbstractApplication
 	private String instance;
 	private final Map<Pattern, RouteHandler> routes = new LinkedHashMap<Pattern, RouteHandler>();
 	private final List<Plugin> plugins = new LinkedList<Plugin>();
+	private ServletContext servletContext;
 
 	/**
 	 * Initialize the framework
@@ -51,20 +52,32 @@ public abstract class AbstractApplication
 	 */
 	public final void init(final ServletContext servletContext)
 	{
+		this.servletContext = servletContext;
+
 		this.loadDefaultProperties();
-		this.loadAppProperties(servletContext);
+		this.loadAppProperties();
 
 		this.instance = this.resolveInstance();
 		if (this.instance == null || this.instance.isEmpty()) {
 			throw new IllegalStateException("Instance can not be null or empty");
 		}
-		this.loadInstanceProperties(servletContext);
+		this.loadInstanceProperties();
 
 		this.setStaticConfig();
 
 		this.loadPlugins();
 
 		this.registerRoutes();
+	}
+
+	/**
+	 * Get the servlet context for the application
+	 *
+	 * @return
+	 */
+	public ServletContext getServletContext()
+	{
+		return this.servletContext;
 	}
 
 	/**
@@ -104,9 +117,9 @@ public abstract class AbstractApplication
 	 *
 	 * @throws RuntimeException if application properties file can not be read
 	 */
-	private void loadAppProperties(final ServletContext servletContext)
+	private void loadAppProperties()
 	{
-		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/framework-x.properties");
+		final InputStream is = this.servletContext.getResourceAsStream("/WEB-INF/framework-x.properties");
 		try {
 			if (is != null) {
 				this.properties.load(is);
@@ -123,9 +136,9 @@ public abstract class AbstractApplication
 	 *
 	 * @throws RuntimeException if an IOException occurs while reading instance properties file
 	 */
-	private void loadInstanceProperties(final ServletContext servletContext)
+	private void loadInstanceProperties()
 	{
-		final InputStream is = servletContext.getResourceAsStream("/WEB-INF/instance-" + this.instance + ".properties");
+		final InputStream is = this.servletContext.getResourceAsStream("/WEB-INF/instance-" + this.instance + ".properties");
 		try {
 			if (is != null) {
 				this.properties.load(is);
@@ -168,7 +181,7 @@ public abstract class AbstractApplication
 
 		// plugin requestReceived hook
 		for (Plugin p : this.plugins) {
-			p.requestReceived(request, response);
+			p.onRequestReceived(request, response);
 		}
 
 		try {
@@ -179,12 +192,16 @@ public abstract class AbstractApplication
 					return;
 				}
 			}
+
+			// @todo 404
 		} catch (Exception ex) {
 			// @todo 500
 			throw new RuntimeException(ex);
+		} finally {
+			for (Plugin p : this.plugins) {
+				p.onRequestFinally(request, response);
+			}
 		}
-
-		// @todo 404
 	}
 
 	/**
@@ -217,11 +234,40 @@ public abstract class AbstractApplication
 	 */
 	private void loadPlugins()
 	{
+		// load the powered by plugin by default
 		if ("Y".equals(this.properties.getProperty("plugins.poweredBy"))) {
 			// add the powered by plugin
 			Plugin p = new PoweredByPlugin();
-			p.init();
+			p.init(null, this);
 			this.plugins.add(p);
+		}
+
+		// get list of other plugins
+		for (String name : this.properties.getProperty("plugins", "").split(",")) {
+			if (!name.isEmpty()) {
+				this.loadPlugin(name);
+			}
+		}
+	}
+
+	/**
+	 * Load the plugin with the given name
+	 *
+	 * @param name
+	 */
+	private void loadPlugin(final String name) {
+		try {
+			final String pluginClassName = this.properties.getProperty("plugin." + name + ".class");
+			if (pluginClassName == null || pluginClassName.isEmpty()) {
+				throw new Exception("Plugin Class not specified");
+			}
+			Class<? extends Plugin> pluginClass = Class.forName(pluginClassName).asSubclass(Plugin.class);
+
+			Plugin p = pluginClass.getConstructor().newInstance();
+			p.init(name, this);
+			this.plugins.add(p);
+		} catch (Exception ex) {
+			throw new RuntimeException("Unable to initialize plugin " + name, ex);
 		}
 	}
 }

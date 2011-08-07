@@ -27,7 +27,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface Plugin
 {
-	public void init();
+	public void init(String name, AbstractApplication app);
 
-	public void requestReceived(HttpServletRequest request, HttpServletResponse response);
+	public void onRequestReceived(HttpServletRequest request, HttpServletResponse response);
+
+	public void onRequestFinally(HttpServletRequest request, HttpServletResponse response);
 }

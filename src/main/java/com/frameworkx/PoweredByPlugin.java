@@ -39,10 +39,10 @@ public class PoweredByPlugin implements Plugin
 	 *
 	 * If anything goes wrong while trying to determine the version, do not display a version
 	 *
-	 * @param request
-	 * @param response
+	 * @param name
+	 * @param app
 	 */
-	public void init()
+	public void init(final String name, final AbstractApplication app)
 	{
 		InputStream is = PoweredByPlugin.class.getResourceAsStream("/META-INF/maven/com.framework-x/framework-x/pom.properties");
 		try {
@@ -67,8 +67,18 @@ public class PoweredByPlugin implements Plugin
 	 * @param request
 	 * @param response
 	 */
-	public void requestReceived(final HttpServletRequest request, final HttpServletResponse response)
+	public void onRequestReceived(final HttpServletRequest request, final HttpServletResponse response)
 	{
 		response.addHeader("X-Powered-By", this.headerValue);
+	}
+
+	/**
+	 * Nothing to do here
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public void onRequestFinally(HttpServletRequest request, HttpServletResponse response)
+	{
 	}
 }
