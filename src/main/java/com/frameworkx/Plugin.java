@@ -27,9 +27,35 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface Plugin
 {
+	/**
+	 * Called during plugin initialization
+	 *
+	 * @param name Name given to the plugin in user configuration
+	 * @param app AbstractApplication object that can be used to access user configuration
+	 */
 	public void init(String name, AbstractApplication app);
 
+	/**
+	 * Called when a request is received
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public void onRequestReceived(HttpServletRequest request, HttpServletResponse response);
 
+	/**
+	 * Called after the response has been sent
+	 *
+	 * @param request
+	 * @param response
+	 */
 	public void onRequestFinally(HttpServletRequest request, HttpServletResponse response);
+
+	/**
+	 * Called when an exception is caught by the framework
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public void onUncaughtException(HttpServletRequest request, HttpServletResponse response);
 }

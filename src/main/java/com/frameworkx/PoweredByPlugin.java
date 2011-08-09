@@ -81,4 +81,14 @@ public class PoweredByPlugin implements Plugin
 	public void onRequestFinally(HttpServletRequest request, HttpServletResponse response)
 	{
 	}
+
+	/**
+	 * Nothing to do here
+	 *
+	 * @param request
+	 * @param response
+	 */
+	public void onUncaughtException(HttpServletRequest request, HttpServletResponse response)
+	{
+	}
 }

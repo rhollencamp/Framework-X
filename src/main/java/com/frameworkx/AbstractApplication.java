@@ -198,6 +198,10 @@ public abstract class AbstractApplication
 
 			// @todo 404
 		} catch (Exception ex) {
+			for (Plugin p : this.plugins) {
+				p.onUncaughtException(request, response);
+			}
+
 			// @todo 500
 			throw new RuntimeException(ex);
 		} finally {
