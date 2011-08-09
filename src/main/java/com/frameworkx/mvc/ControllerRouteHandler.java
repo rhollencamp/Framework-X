@@ -17,6 +17,7 @@
  */
 package com.frameworkx.mvc;
 
+import com.frameworkx.AbstractApplication;
 import com.frameworkx.RouteHandler;
 import com.thoughtworks.paranamer.CachingParanamer;
 import java.lang.reflect.Method;
@@ -35,17 +36,62 @@ import org.apache.commons.lang.WordUtils;
 public class ControllerRouteHandler implements RouteHandler
 {
 	private static final CachingParanamer paranamer = new CachingParanamer();
-	private static final String controllerPostfix = "Controller";
+
+	// static configuration
+	private static String controllerPostfix;
+	private static String defaultArea;
+
 	private final String packageName;
 	private final Object className;
 	private final Object methodName;
+	private final String areaName;
+
+	/**
+	 * Create a new controller route handler with the given package, class, method, and area
+	 *
+	 * @param packageName Package name as a String where controllers can be found for this route
+	 * @param className Name of the controller class to use for this route. If an Integer object is
+	 * passed, then the capture group of the route pattern will be used. If className is not an Integer,
+	 * toString will be called and used as the class name
+	 * @param methodName Name of the controller method to use for this route. If an Integer object is
+	 * passed, then the capture group of the route pattern will be used. If methodName is not an Integer,
+	 * toString will be called and used as the method name
+	 * @param area Name of the area to use for this route handler. The route is used to separate templates;
+	 * templates will be looked up using /Views/{Area Name}/{Controller Name}/{Method Name}.{extension}
+	 */
+	public ControllerRouteHandler(final String packageName, final Object className, final Object methodName, final String area)
+	{
+		if (packageName == null || packageName.isEmpty()) {
+			throw new IllegalArgumentException("Package Name can not be null or empty");
+		}
+		this.packageName = packageName;
+
+		if (className == null) {
+			throw new IllegalArgumentException("Class Name can not be null");
+		}
+		this.className = className;
+
+		if (methodName == null) {
+			throw new IllegalArgumentException("Method Name can not be null");
+		}
+		this.methodName = methodName;
+
+		if (area == null || area.isEmpty()) {
+			throw new IllegalArgumentException("Area Name can not be null or empty");
+		}
+		this.areaName = area;
+	}
 
 	/**
 	 * Create a new controller route handler with the given package, class, and method
 	 *
-	 * @param packageName
-	 * @param className
-	 * @param methodName
+	 * @param packageName Package name as a String where controllers can be found for this route
+	 * @param className Name of the controller class to use for this route. If an Integer object is
+	 * passed, then the capture group of the route pattern will be used. If className is not an Integer,
+	 * toString will be called and used as the class name
+	 * @param methodName Name of the controller method to use for this route. If an Integer object is
+	 * passed, then the capture group of the route pattern will be used. If methodName is not an Integer,
+	 * toString will be called and used as the method name
 	 */
 	public ControllerRouteHandler(final String packageName, final Object className, final Object methodName)
 	{
@@ -63,12 +109,15 @@ public class ControllerRouteHandler implements RouteHandler
 			throw new IllegalArgumentException("Method Name can not be null");
 		}
 		this.methodName = methodName;
+
+		this.areaName = defaultArea;
 	}
 
 	/**
 	 * Given a method, try and fill in any String arguments from the request (GET, POST)
 	 *
 	 * @param method
+	 * @param request
 	 * @return
 	 */
 	private Object[] getMethodArgs(final Method method, final HttpServletRequest request)
@@ -178,14 +227,32 @@ public class ControllerRouteHandler implements RouteHandler
 				return;
 			}
 
-			// store chosen method and controller in the request
+			// store chosen values in the request
 			request.setAttribute("com.frameworkx.controllerMethod", controllerMethod);
 			request.setAttribute("com.frameworkx.controller", controller);
+			request.setAttribute("com.frameworkx.controllerArea", this.areaName);
 
 			Result result = (Result) controllerMethod.invoke(controller, getMethodArgs(controllerMethod, request));
 			result.execute(request, response);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	/**
+	 * Initialize static config when application starts
+	 *
+	 * Called automatically by framework in initialization; should never be called from user code
+	 *
+	 * @param app
+	 */
+	public static void init(final AbstractApplication app)
+	{
+		defaultArea = app.getProperty("mvc.defaultArea");
+		if (defaultArea != null && defaultArea.isEmpty()) {
+			defaultArea = null;
+		}
+
+		controllerPostfix = app.getProperty("mvc.controllerPostfix");
 	}
 }

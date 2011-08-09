@@ -17,6 +17,7 @@
  */
 package com.frameworkx;
 
+import com.frameworkx.mvc.ControllerRouteHandler;
 import com.frameworkx.mvc.ViewResult;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,8 @@ public abstract class AbstractApplication
 	 * Initialize the framework
 	 *
 	 * This should not be called from client code
+	 *
+	 * @param servletContext
 	 */
 	public final void init(final ServletContext servletContext)
 	{
@@ -227,6 +230,7 @@ public abstract class AbstractApplication
 	private void setStaticConfig()
 	{
 		ViewResult.init(this);
+		ControllerRouteHandler.init(this);
 	}
 
 	/**

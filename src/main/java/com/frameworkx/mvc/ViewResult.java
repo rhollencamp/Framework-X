@@ -65,17 +65,20 @@ public class ViewResult extends Result
 		}
 
 		// determine path to template and forward
-		final String templateName = templateBase + "/" + className + "/" + methodName + "." + templateExtension;
+		Object area = request.getAttribute("com.frameworkx.controllerArea");
+		String areaStr = area == null ? "" : area.toString() + "/";
+		final String templateName = templateBase + "/" + areaStr + className + "/" + methodName + "." + templateExtension;
 		request.getRequestDispatcher(templateName).forward(request, response);
 	}
 
 	/**
 	 * Load configuration options the first time a ViewResult is
-	 * @param request
+	 *
+	 * @param app
 	 */
 	public static void init(final AbstractApplication app)
 	{
-		controllerPostfix = app.getProperty("viewEngine.controllerPostfix");
+		controllerPostfix = app.getProperty("mvc.controllerPostfix");
 		templateBase = app.getProperty("viewEngine.templateBaseDir");
 		templateExtension = app.getProperty("viewEngine.templateExtension");
 	}
